@@ -1,40 +1,62 @@
+import {useContext, useState} from "react";
+import { useNavigate, Link} from "react-router-dom";
+
+import { AuthContext } from "../contexts/AuthContext";
+import * as authService from "../services/authService";
+
 const Login = () => {
+    const { userLogin } = useContext(AuthContext);
+    const navigate = useNavigate();
+
+    const [values, setValues] = useState({
+        email: '',
+        password: '',
+
+    });
+
+    const changeHandler = (e) => {
+        setValues(state => ({
+            ...state,
+            [e.target.name]: e.target.value
+        }));
+    };
+
+    const submitHandler = (e) => {
+        e.preventDefault();
+        const { email, password } = values
+
+        authService.login(email, password)
+            .then(authData => {
+                userLogin(authData);
+                navigate('/');
+            })
+            .catch(() => {
+                navigate('/404');
+            });
+
+    };
+
     return (
-        <main className="main" role="main">
-
-            <div className="wrap clearfix">
-
                 <div className="row">
-
                     <section className="content center full-width">
                         <div className="modal container">
                             <h3>Login</h3>
-                            <div className="f-row">
-                                <input type="text" placeholder="Your username"/>
-                            </div>
-                            <div className="f-row">
-                                <input type="password" placeholder="Your password"/>
-                            </div>
+                            <form onSubmit={submitHandler}>
+                                <div className="f-row">
+                                    <input type="email" id="email" name="email" value={values.email} onChange={changeHandler} placeholder="Your email"/>
+                                </div>
+                                <div className="f-row">
+                                    <input type="password" id="password" name="password" value={values.password} onChange={changeHandler} placeholder="Your password"/>
+                                </div>
+                                <div className="f-row bwrap">
+                                    <button type="submit" >login</button>
+                                </div>
+                            </form>
+                            <p>Dont have an account yet? <Link to="/register">Sign up.</Link></p>
 
-                            <div className="f-row">
-                                <div className="checker"><span><input type="checkbox"/></span></div>
-                                <label>Remember me next time</label>
-                            </div>
-
-                            <div className="f-row bwrap">
-                                <input type="submit" value="login"/>
-                            </div>
-                            <p><a href="#">Forgotten password?</a></p>
-                            <p>Dont have an account yet? <a href="register.html">Sign up.</a></p>
                         </div>
                     </section>
-
                 </div>
-
-            </div>
-
-
-        </main>
 
     );
 };
