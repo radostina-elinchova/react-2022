@@ -1,24 +1,58 @@
-import { useParams } from 'react-router-dom';
+import { useEffect, useState, useContext } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { RecipeContext } from '../contexts/RecipeContext';
+
+import * as recipeService from '../services/recipeService';
+
 
 const SingleRecipe = () => {
+    const navigate = useNavigate();
+    const { fetchRecipeDetails, selectRecipe, recipeRemove } = useContext(RecipeContext);
+    const { recipeId } = useParams();
+
+    const currentRecipe = selectRecipe(recipeId);
+
+    useEffect(() => {
+        (async () => {
+            const recipeDetails = await recipeService.getOne(recipeId);
+            fetchRecipeDetails(recipeId, { ...recipeDetails });
+        })();
+    }, [])
+
+
+    const recipeDeleteHandler = () => {
+        const confirmation = window.confirm('Are you sure you want to delete this recipe?');
+        if (confirmation) {
+            recipeService.remove(recipeId)
+                .then(() => {
+                    recipeRemove(recipeId);
+                    navigate('/recipes');
+                })
+        }
+    }
+    const recipeEditHandler = () => {
+        const confirmation = window.confirm('Are you sure you want to delete this recipe?');
+        if (confirmation) {
+            recipeService.remove(recipeId)
+                .then(() => {
+                    recipeRemove(recipeId);
+                    navigate('/recipes');
+                })
+        }
+    }
+
+
     return (
         <main className="main" role="main">
             {/*wrap*/}
             <div className="wrap clearfix">
-                {/*breadcrumbs*/}
-                <nav className="breadcrumbs">
-                    <ul>
-                        <li><a href="index.html" title="Home">Home</a></li>
-                        <li><a href="#" title="Recipes">Recipes</a></li>
-                        <li><a href="recipes.html" title="Cocktails">Deserts</a></li>
-                        <li>Recipe</li>
-                    </ul>
-                </nav>
-                {/*//breadcrumbs*/}
-                {/*row*/}
+
                 <div className="row">
                     <header className="s-title">
                         <h1>A luxurious black &amp; white chocolate cupcake</h1>
+                        <button id="editRecipe" className="button" type="button" onClick={recipeEditHandler}>Edit this recipe</button>
+
+                        <button id="removeRecipe" className="button" type="button" onClick={recipeDeleteHandler}>Delete this recipe</button>
                     </header>
                     {/*content*/}
                     <section className="content three-fourth">
@@ -190,12 +224,13 @@ const SingleRecipe = () => {
                                         </div>
                                     </div>
                                 </form>
+
                             </div>
                         </div>
+
                         {/*//respond*/}
                     </section>
-                    {/*//content*/}
-                    {/*right sidebar*/}
+
                     <aside className="sidebar one-fourth">
                         <div className="widget nutrition">
                             <h3>Nutrition facts <span>(per serving)</span></h3>
