@@ -17,30 +17,30 @@ import Logout from "./components/Logout";
 function App() {
     return (
         <AuthProvider>
-            <div id="box">
-            <Header />
+            <div id="app">
+                <Header />
 
-            <main className="main" role="main">
-                {/*wrap*/}
-                <div className="wrap clearfix">
-                <Routes>
-                    <Route path="/" element={<Home/>} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register /> } />
-                    <Route path="/logout" element={<Logout /> } />
-                    <Route path="/create" element={(
-                        <PrivateRoute>
-                            <CreateRecipe />
-                        </PrivateRoute>
-                    )} />
+                <main className="main" role="main">
+                    {/*wrap*/}
+                    <div className="wrap clearfix">
+                    <Routes>
+                        <Route path="/" element={<Home/>} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register /> } />
+                        <Route path="/logout" element={<Logout /> } />
+                        <Route path="/create" element={(
+                            <PrivateRoute>
+                                <CreateRecipe />
+                            </PrivateRoute>
+                        )} />
 
-                    <Route path="/list" element={<RecipesList />} />
-                    <Route path="/list/:recipeId" element={<SingleRecipe />} />
-                    <Route path="/profileDetails" element={<ProfileDetails />} />
-                </Routes>
-                </div>
-            </main>
-        </div>
+                        <Route path="/list" element={<RecipesList />} />
+                        <Route path="/list/:recipeId" element={<SingleRecipe />} />
+                        <Route path="/profileDetails" element={<ProfileDetails />} />
+                    </Routes>
+                    </div>
+                </main>
+            </div>
         </AuthProvider>
     );
 }
