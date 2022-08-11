@@ -1,15 +1,15 @@
 import { useEffect, useState, useContext } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { RecipeContext } from '../contexts/RecipeContext';
-
 import * as recipeService from '../services/recipeService';
+import {AuthContext} from "../contexts/AuthContext";
 
 
 const SingleRecipe = () => {
     const navigate = useNavigate();
-    const { fetchRecipeDetails, selectRecipe, recipeRemove } = useContext(RecipeContext);
+    const { fetchRecipeDetails, selectRecipe, recipeRemove, } = useContext(RecipeContext);
     const { recipeId } = useParams();
-
+    const { user } = useContext(AuthContext);
     const currentRecipe = selectRecipe(recipeId);
 
     useEffect(() => {
@@ -30,16 +30,7 @@ const SingleRecipe = () => {
                 })
         }
     }
-    const recipeEditHandler = () => {
-        const confirmation = window.confirm('Are you sure you want to delete this recipe?');
-        if (confirmation) {
-            recipeService.remove(recipeId)
-                .then(() => {
-                    recipeRemove(recipeId);
-                    navigate('/recipes');
-                })
-        }
-    }
+
 
 
     return (
@@ -50,17 +41,25 @@ const SingleRecipe = () => {
                 <div className="row">
                     <header className="s-title">
                         <h1>A luxurious black &amp; white chocolate cupcake</h1>
-                        <button id="editRecipe" className="button" type="button" onClick={recipeEditHandler}>Edit this recipe</button>
 
-                        <button id="removeRecipe" className="button" type="button" onClick={recipeDeleteHandler}>Delete this recipe</button>
                     </header>
                     {/*content*/}
                     <section className="content three-fourth">
                         {/*recipe*/}
                         <div className="recipe">
                             <div className="row">
+
                                 {/*two-third*/}
                                 <article className="two-third">
+                                    { user.email &&
+                                        <>
+                                            <Link to={`/recipes/${recipeId}/edit`}>
+                                                <button id="editRecipe" className="button" type="button">Edit this recipe</button>
+                                            </Link>
+                                            <button id="removeRecipe" style={{marginLeft:'15px'}} className="button" type="button" onClick={recipeDeleteHandler}>Delete this recipe</button>
+                                        </>
+                                    }
+
                                     <div className="image"><a href="#"><img src="images/img.jpg" alt="" /></a></div>
                                     <div className="intro"><p><strong>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas</strong></p> <p>Molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.</p></div>
                                     <div className="instructions">

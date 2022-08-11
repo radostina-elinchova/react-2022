@@ -15,6 +15,7 @@ import RecipesList from './components/RecipesList';
 import SingleRecipe from "./components/SingleRecipe";
 import ProfileDetails from "./components/ProfileDetails";
 import Logout from "./components/Logout";
+import EditRecipe from "./components/EditRecipe";
 
 
 
@@ -39,7 +40,11 @@ function App() {
                                 <CreateRecipe />
                             </PrivateRoute>
                         )} />
-
+                        <Route path="/recipes/:recipeId/edit" element={(
+                            <PrivateRoute>
+                                <EditRecipe />
+                            </PrivateRoute>
+                        )} />
                         <Route path="/recipes" element={<RecipesList />} />
                         <Route path="/recipes/:recipeId" element={<SingleRecipe />} />
                         <Route path="/profileDetails" element={<ProfileDetails />} />

@@ -22,6 +22,8 @@ export const RecipeProvider = ({
 
 
     const recipeAdd = (recipeData) => {
+        console.log("rec",recipes);
+        console.log("data",recipeData);
         setRecipes(state => [
             ...state,
             {
@@ -44,11 +46,15 @@ export const RecipeProvider = ({
        setRecipes( state => state.filter(x => x._id !== recipeId))
     }
 
+    const recipeEdit = (recipeId, recipeData) => {
+        setRecipes(state => state.map(x => x._id === recipeId ? recipeData : x));
+    };
 
     return (
         <RecipeContext.Provider value={{
             recipes,
             recipeAdd,
+            recipeEdit,
             fetchRecipeDetails,
             selectRecipe,
             recipeRemove
