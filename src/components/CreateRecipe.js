@@ -5,7 +5,7 @@ import * as recipeService from '../services/recipeService';
 import * as authService from "../services/authService";
 import { useNavigate } from "react-router-dom";
 
-const CreateRecipe = ({addRecipeHandler}) => {
+const CreateRecipe = () => {
     const { recipeAdd } = useContext(RecipeContext);
     const navigate = useNavigate();
 
@@ -14,7 +14,11 @@ const CreateRecipe = ({addRecipeHandler}) => {
         prepTime: '',
         cookTime: '',
         difficulty: '',
-        servings:''
+        servings: '',
+        category: 'Deserts',
+        description: '',
+        pictureUrl: '',
+        radio: 'ready',
     });
 
     const changeHandler = (e) => {
@@ -23,6 +27,7 @@ const CreateRecipe = ({addRecipeHandler}) => {
             [e.target.name]: e.target.value
         }));
     };
+
 
     const onSubmit = (e) => {
         e.preventDefault();
@@ -67,28 +72,67 @@ const CreateRecipe = ({addRecipeHandler}) => {
                                         <div className="third">
                                             <input id="servings" name="servings" type="text" value={values.servings} onChange={changeHandler} placeholder="Serves how many people?"/>
                                         </div>
-                                        {/*<div className="third">*/}
-                                        {/*    <div className="selector" style={{width: '146.117px'}}><span style={{*/}
-                                        {/*        width: '134.117px',*/}
-                                        {/*        userSelect: 'none'*/}
-                                        {/*    }}>Select a category</span>*/}
-                                        {/*        <select>*/}
-                                        {/*            <option>Select a category</option>*/}
-                                        {/*        </select>*/}
-                                        {/*    </div>*/}
-                                        {/*</div>*/}
+                                        <div className="third">
+                                            <div className="selector" style={{ width: '146.117px' }}>
+                                                <span style={{ width: '134.117px' }}>
+                                                    {values.category}
+                                                </span>
+                                                <select  className="selector" style={{ width: '146.117px' }} name="category" id="category" onChange={changeHandler}>
+                                                    <option value="Deserts">Deserts</option>
+                                                    <option value="Salads">Salads</option>
+                                                    <option value="Meat">Meat</option>
+                                                    <option value="Apetizers">Apetizers</option>
+                                                    <option value="Soups">Soups</option>
+                                                </select>
+
+                                            </div>
+                                        </div>
                                     </div>
                                 </section>
                                 <section>
                                     <h2>Description</h2>
                                     <div className="f-row">
-                                        <div className="full"><textarea placeholder="Recipe title" defaultValue={""}/>
+                                        <div className="full">
+                                            <textarea id="description" name="description" value={values.description} onChange={changeHandler} placeholder="Recipe description" defaultValue={""}/>
                                         </div>
                                     </div>
                                 </section>
+
+                                <section>
+                                    <h2>Photo</h2>
+                                    <div className="f-row full">
+                                        <div >
+                                            <input id="pictureUrl" name="pictureUrl" type="text" value={values.pictureUrl} onChange={changeHandler} placeholder="Choose File Url"/>
+                                        </div>
+                                    </div>
+                                </section>
+                                <section>
+                                    <h2>Status <span>(would you like to further edit this recipe or are you ready to publish it?)</span>
+                                    </h2>
+                                    <div className="f-row full">
+                                        <div className="radio" id="uniform-r1">
+                                            <span>
+                                               <input type="radio" id="r1" name="radio" value="notready" onChange={changeHandler} checked={values.radio == 'notready'} />
+                                            </span>
+                                        </div>
+                                        <label htmlFor="r1">I am still working on it</label>
+                                    </div>
+                                    <div className="f-row full">
+                                        <div className="radio" id="uniform-r2">
+                                            <span>
+                                                <input type="radio" id="r2"  name="radio" value="ready" onChange={changeHandler} checked={values.radio == 'ready'}/>
+                                            </span>
+                                        </div>
+                                        <label htmlFor="r2">I am ready to publish this recipe</label>
+
+                                    </div>
+                                </section>
+
                                 <div className="f-row full">
                                     <button id="submitRecipe" className="button" type="submit" >Publish this recipe</button>
+                                    <button id="close"  style={{marginLeft:'15px'}} className="button" type="button" onClick={() => navigate(-1)}>Close</button>
                                 </div>
+
                                 {/*<section>*/}
                                 {/*    <h2>Ingredients</h2>*/}
                                 {/*    <div className="f-row ingredient">*/}
@@ -109,6 +153,7 @@ const CreateRecipe = ({addRecipeHandler}) => {
                                 {/*        <button className="add">Add an ingredient</button>*/}
                                 {/*    </div>*/}
                                 {/*</section>*/}
+
                                 {/*<section>*/}
                                 {/*    <h2>Instructions <span>(enter instructions, each step at a time)</span></h2>*/}
                                 {/*    <div className="f-row instruction">*/}
@@ -119,29 +164,11 @@ const CreateRecipe = ({addRecipeHandler}) => {
                                 {/*        <button className="add">Add a step</button>*/}
                                 {/*    </div>*/}
                                 {/*</section>*/}
-                                {/*<section>*/}
-                                {/*    <h2>Photo</h2>*/}
-                                {/*    <div className="f-row full">*/}
-                                {/*        <div className="uploader">*/}
-                                {/*            <input type="file"/><span className="filename" style={{userSelect: 'none'}}>No file selected</span>*/}
-                                {/*            <span className="action" style={{userSelect: 'none'}}>Choose File</span>*/}
-                                {/*        </div>*/}
-                                {/*    </div>*/}
-                                {/*</section>*/}
-                                {/*<section>*/}
-                                {/*    <h2>Status <span>(would you like to further edit this recipe or are you ready to publish it?)</span>*/}
-                                {/*    </h2>*/}
-                                {/*    <div className="f-row full">*/}
-                                {/*        <div className="radio" id="uniform-r1"><span><input type="radio" id="r1"*/}
-                                {/*                                                            name="radio"/></span></div>*/}
-                                {/*        <label htmlFor="r1">I am still working on it</label>*/}
-                                {/*    </div>*/}
-                                {/*    <div className="f-row full">*/}
-                                {/*        <div className="radio" id="uniform-r2"><span><input type="radio" id="r2"*/}
-                                {/*                                                            name="radio"/></span></div>*/}
-                                {/*        <label htmlFor="r2">I am ready to publish this recipe</label>*/}
-                                {/*    </div>*/}
-                                {/*</section>*/}
+
+
+
+
+
 
                             </form>
                         </div>

@@ -27,7 +27,13 @@ const Header = () => {
                                 <span>Recipes</span>
                             </Link>
                         </li>
-
+                        {user.email &&
+                            <li>
+                                <Link to="/myrecipes" title="My Recipes">
+                                    <span>My Recipes</span>
+                                </Link>
+                            </li>
+                        }
                     </ul>
                 </nav>
                 { user.email &&

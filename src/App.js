@@ -16,6 +16,8 @@ import SingleRecipe from "./components/SingleRecipe";
 import ProfileDetails from "./components/ProfileDetails";
 import Logout from "./components/Logout";
 import EditRecipe from "./components/EditRecipe";
+import MyRecipesList from "./components/MyRecipesList";
+import Footer from "./components/Footer";
 
 
 
@@ -46,12 +48,18 @@ function App() {
                             </PrivateRoute>
                         )} />
                         <Route path="/recipes" element={<RecipesList />} />
+                        <Route path="/myrecipes" element={(
+                            <PrivateRoute>
+                                <MyRecipesList />
+                            </PrivateRoute>
+                        )} />
                         <Route path="/recipes/:recipeId" element={<SingleRecipe />} />
                         <Route path="/profileDetails" element={<ProfileDetails />} />
                     </Routes>
                     </div>
                 </main>
                 </RecipeProvider>
+                <Footer/>
             </div>
         </AuthProvider>
     );
