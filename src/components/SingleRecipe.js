@@ -4,6 +4,7 @@ import { RecipeContext } from '../contexts/RecipeContext';
 import * as recipeService from '../services/recipeService';
 import * as commentService from '../services/commentService';
 import {AuthContext, user} from "../contexts/AuthContext";
+;
 
 
 const SingleRecipe = () => {
@@ -12,6 +13,8 @@ const SingleRecipe = () => {
     const { recipeId } = useParams();
     const { user, isAuthenticated } = useContext(AuthContext);
     const currentRecipe = selectRecipe(recipeId);
+
+
 
     const [comment, setComment] = useState({
         content: '',
@@ -29,9 +32,14 @@ const SingleRecipe = () => {
         (async () => {
             const recipeDetails = await recipeService.getOne(recipeId);
             const recipeComments = await commentService.getByRecipeId(recipeId);
+
+            console.log("recipeComents", recipeComments)
             fetchRecipeDetails(recipeId, { ...recipeDetails, comments: recipeComments });
         })();
+        console.log("user", user)
+
     }, [])
+
 
     const addCommentHandler = (e) => {
         e.preventDefault();
@@ -43,6 +51,7 @@ const SingleRecipe = () => {
     };
 
     const recipeDeleteHandler = () => {
+
         const confirmation = window.confirm('Are you sure you want to delete this recipe?');
         if (confirmation) {
             recipeService.remove(recipeId)
@@ -52,8 +61,6 @@ const SingleRecipe = () => {
                 })
         }
     }
-
-
 
     return (
         <main className="main" role="main">
@@ -131,12 +138,12 @@ const SingleRecipe = () => {
                                     {currentRecipe.comments?.map(x =>
                                         <li key={x} className="comment depth-1">
                                             <div className="avatar">
-                                                <img  src={user.imageUrl} alt=""/>
+                                                <img  src={x.user.imageUrl} alt=""/>
                                             </div>
                                             <div className="comment-box">
                                                 <div className="comment-author meta">
-                                                    <strong>{user.name}</strong> said {x._createdOn} ago
-                                                    {isAuthenticated &&
+                                                    <strong>{x.user.name}</strong> said {x._createdOn} ago
+                                                    {isAuthenticated && user._id === currentRecipe._ownerId &&
                                                         <a href="#respond" className="comment-reply-link"> Reply </a>
                                                     }
                                                 </div>
@@ -149,7 +156,7 @@ const SingleRecipe = () => {
                                 </ol>
                             </div>
                         }
-                        { isAuthenticated &&
+                        { isAuthenticated && user._id === currentRecipe._ownerId &&
                             <>
                                 <div className="comment-respond" id="respond">
                                 <h2>Leave a reply</h2>
@@ -160,7 +167,7 @@ const SingleRecipe = () => {
                                             </div>
                                             <div className="f-row">
                                                 <div className="third bwrap">
-                                                    <input type="submit" defaultValue="Submit comment" />
+                                                    <button id="submitComment" type="submit" >Submit comment</button>
                                                 </div>
                                             </div>
                                             <div className="bottom">
