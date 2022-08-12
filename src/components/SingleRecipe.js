@@ -2,23 +2,45 @@ import { useEffect, useState, useContext } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { RecipeContext } from '../contexts/RecipeContext';
 import * as recipeService from '../services/recipeService';
-import {AuthContext} from "../contexts/AuthContext";
+import * as commentService from '../services/commentService';
+import {AuthContext, user} from "../contexts/AuthContext";
 
 
 const SingleRecipe = () => {
     const navigate = useNavigate();
-    const { fetchRecipeDetails, selectRecipe, recipeRemove, } = useContext(RecipeContext);
+    const { fetchRecipeDetails, selectRecipe, recipeRemove, addComment } = useContext(RecipeContext);
     const { recipeId } = useParams();
-    const { user } = useContext(AuthContext);
+    const { user, isAuthenticated } = useContext(AuthContext);
     const currentRecipe = selectRecipe(recipeId);
+
+    const [comment, setComment] = useState({
+        content: '',
+        emailNotification: false,
+    });
+
+    const changeHandler = (e) => {
+        setComment(state => ({
+            ...state,
+            [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value
+        }));
+    };
 
     useEffect(() => {
         (async () => {
             const recipeDetails = await recipeService.getOne(recipeId);
-            fetchRecipeDetails(recipeId, { ...recipeDetails });
+            const recipeComments = await commentService.getByRecipeId(recipeId);
+            fetchRecipeDetails(recipeId, { ...recipeDetails, comments: recipeComments });
         })();
     }, [])
 
+    const addCommentHandler = (e) => {
+        e.preventDefault();
+
+        commentService.create(recipeId, comment)
+            .then(result => {
+                addComment(recipeId, comment);
+            });
+    };
 
     const recipeDeleteHandler = () => {
         const confirmation = window.confirm('Are you sure you want to delete this recipe?');
@@ -35,22 +57,16 @@ const SingleRecipe = () => {
 
     return (
         <main className="main" role="main">
-            {/*wrap*/}
             <div className="wrap clearfix">
-
                 <div className="row">
                     <header className="s-title">
                         <h1>A luxurious black &amp; white chocolate cupcake</h1>
                     </header>
-                    {/*content*/}
                     <section className="content three-fourth">
-                        {/*recipe*/}
                         <div className="recipe">
                             <div className="row">
-
-                                {/*two-third*/}
                                 <article className="two-third">
-                                    { user.email && user._id === currentRecipe._ownerId &&
+                                    { isAuthenticated && user._id === currentRecipe._ownerId &&
                                         <>
                                             <Link to={`/recipes/${recipeId}/edit`}>
                                                 <button id="editRecipe" className="button" type="button">Edit this recipe</button>
@@ -70,8 +86,6 @@ const SingleRecipe = () => {
                                         </ol>
                                     </div>
                                 </article>
-                                {/*//two-third*/}
-                                {/*one-third*/}
                                 <article className="one-third">
                                     <dl className="basic">
                                         <dt>Preparation time</dt>
@@ -110,71 +124,59 @@ const SingleRecipe = () => {
                                 </article>
                             </div>
                         </div>
-                        <div className="comments" id="comments">
-                            <h2>5 comments </h2>
-                            <ol className="comment-list">
-                                <li className="comment depth-1">
-                                    <div className="avatar"><a href="my_profile.html"><img src="../images/avatar1.jpg" alt="" /></a></div>
-                                    <div className="comment-box">
-
-                                            <div className="comment-author meta">
-                                                <strong>Kimberly C.</strong> said 1 month ago
-                                                { user.email &&
-                                                    <a href="#respond" className="comment-reply-link"> Reply </a>
-                                                }
+                        {currentRecipe.comments &&
+                            <div className="comments" id="comments">
+                                <h2>{currentRecipe.comments ? 0 : currentRecipe.comments.length + 1} comment/s </h2>
+                                <ol className="comment-list">
+                                    {currentRecipe.comments?.map(x =>
+                                        <li key={x} className="comment depth-1">
+                                            <div className="avatar">
+                                                <img  src={user.imageUrl} alt=""/>
                                             </div>
-
-                                        <div className="comment-text">
-                                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation.</p>
-                                        </div>
-                                    </div>
-                                </li>
-
-                            </ol>
-                        </div>
-
-                        { user.email &&
-                            <div className="comment-respond" id="respond">
-                            <h2>Leave a reply</h2>
-                            <div className="container">
-                                <p><strong>Note:</strong> Comments on the web site reflect the views of their authors, and not necessarily the views of the socialchef internet portal. Requested to refrain from insults, swearing and vulgar expression. We reserve the right to delete any comment without notice explanations.</p>
-                                <p>Your email address will not be published. Required fields are signed with <span className="req">*</span></p>
-                                <form>
-                                    <div className="f-row">
-                                        <div className="third">
-                                            <input type="text" placeholder="Your name" />
-                                            <span className="req">*</span>
-                                        </div>
-                                        <div className="third">
-                                            <input type="email" placeholder="Your email" />
-                                            <span className="req">*</span>
-                                        </div>
-                                        <div className="third">
-                                            <input type="text" placeholder="Your website" />
-                                        </div>
-                                    </div>
-                                    <div className="f-row">
-                                        <textarea defaultValue={""} />
-                                    </div>
-                                    <div className="f-row">
-                                        <div className="third bwrap">
-                                            <input type="submit" defaultValue="Submit comment" />
-                                        </div>
-                                    </div>
-                                    <div className="bottom">
-                                        <div className="f-row checkbox">
-                                            <div className="checker" id="uniform-ch1"><span><input type="checkbox" id="ch1" /></span></div>
-                                            <label htmlFor="ch1">Notify me of replies to my comment via e-mail</label>
-                                        </div>
-                                        <div className="f-row checkbox">
-                                            <div className="checker" id="uniform-ch2"><span><input type="checkbox" id="ch2" /></span></div>
-                                            <label htmlFor="ch2">Notify me of new articles by email.</label>
-                                        </div>
-                                    </div>
-                                </form>
-
+                                            <div className="comment-box">
+                                                <div className="comment-author meta">
+                                                    <strong>{user.name}</strong> said {x._createdOn} ago
+                                                    {isAuthenticated &&
+                                                        <a href="#respond" className="comment-reply-link"> Reply </a>
+                                                    }
+                                                </div>
+                                                <div className="comment-text">
+                                                    <p>{x.content}</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    )}
+                                </ol>
                             </div>
-                        </div>
+                        }
+                        { isAuthenticated &&
+                            <>
+                                <div className="comment-respond" id="respond">
+                                <h2>Leave a reply</h2>
+                                    <div className="container">
+                                        <form onSubmit={ addCommentHandler }>
+                                            <div className="f-row">
+                                                <textarea id="contetnt" name="content"  value={comment.content} onChange={changeHandler} placeholder="Please enter your reply" />
+                                            </div>
+                                            <div className="f-row">
+                                                <div className="third bwrap">
+                                                    <input type="submit" defaultValue="Submit comment" />
+                                                </div>
+                                            </div>
+                                            <div className="bottom">
+                                                <div className="f-row checkbox">
+                                                    <div className="checker" id="uniform-ch2">
+                                                        <span>
+                                                            <input type="checkbox" name="emailNotification" id="ch2" checked={comment.emailNotification} onChange={changeHandler}/>
+                                                        </span>
+                                                    </div>
+                                                    <label htmlFor="ch2">Notify me of new articles by email.</label>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </>
                         }
                     </section>
                 </div>

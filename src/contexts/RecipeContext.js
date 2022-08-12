@@ -5,8 +5,6 @@ import * as recipeService from '../services/recipeService';
 
 export const RecipeContext = createContext();
 
-
-
 export const RecipeProvider = ({
      children,
  }) => {
@@ -34,6 +32,21 @@ export const RecipeProvider = ({
         navigate('/recipes');
     };
 
+    const addComment = (recipeId, comment) => {
+
+        setRecipes(state => {
+            const recipe = state.find(x => x._id == recipeId);
+
+            const comments = recipe.comments || [];
+            comments.push(comment)
+
+            return [
+                ...state.filter(x => x._id !== recipeId),
+                { ...recipe, comments },
+            ];
+        });
+    };
+
     const selectRecipe = (recipeId) => {
         return recipes.find(x => x._id === recipeId) || {};
     };
@@ -57,7 +70,8 @@ export const RecipeProvider = ({
             recipeEdit,
             fetchRecipeDetails,
             selectRecipe,
-            recipeRemove
+            recipeRemove,
+            addComment
 
         }}>
             {children}

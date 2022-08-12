@@ -6,7 +6,7 @@ import { AuthContext } from '../contexts/AuthContext';
 
 const Header = () => {
 
-    const { user } = useContext(AuthContext);
+    const { isAuthenticated, user } = useContext(AuthContext);
 
     return (
         <header className="head" role="banner">
@@ -27,7 +27,7 @@ const Header = () => {
                                 <span>Recipes</span>
                             </Link>
                         </li>
-                        {user.email &&
+                        {isAuthenticated &&
                             <li>
                                 <Link to="/myrecipes" title="My Recipes">
                                     <span>My Recipes</span>
@@ -36,7 +36,7 @@ const Header = () => {
                         }
                     </ul>
                 </nav>
-                { user.email &&
+                { isAuthenticated &&
                     <nav className="user-nav" role="navigation">
                         <ul>
                             <li className="light">
