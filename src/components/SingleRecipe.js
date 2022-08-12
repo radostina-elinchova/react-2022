@@ -3,8 +3,8 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { RecipeContext } from '../contexts/RecipeContext';
 import * as recipeService from '../services/recipeService';
 import * as commentService from '../services/commentService';
-import {AuthContext, user} from "../contexts/AuthContext";
-;
+import {AuthContext } from "../contexts/AuthContext";
+
 
 
 const SingleRecipe = () => {
@@ -16,42 +16,34 @@ const SingleRecipe = () => {
 
 
 
-    const [comment, setComment] = useState({
-        content: '',
-        emailNotification: false,
-    });
-
-    const changeHandler = (e) => {
-        setComment(state => ({
-            ...state,
-            [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value
-        }));
-    };
-
     useEffect(() => {
-        (async () => {
-            const recipeDetails = await recipeService.getOne(recipeId);
-            const recipeComments = await commentService.getByRecipeId(recipeId);
-
-            console.log("recipeComents", recipeComments)
-            fetchRecipeDetails(recipeId, { ...recipeDetails, comments: recipeComments });
-        })();
-        console.log("user", user)
+        singlePageDetails()
 
     }, [])
 
+    const singlePageDetails = (async () => {
+        const recipeDetails = await recipeService.getOne(recipeId);
+        const recipeComments = await commentService.getByRecipeId(recipeId);
+
+        console.log("recipeComents", recipeComments)
+        fetchRecipeDetails(recipeId, { ...recipeDetails, comments: recipeComments });
+
+    })
 
     const addCommentHandler = (e) => {
         e.preventDefault();
-
+        const formData = new FormData(e.target);
+        const comment = formData.get('commentText');
+        console.log("comment text",comment)
         commentService.create(recipeId, comment)
             .then(result => {
                 addComment(recipeId, comment);
             });
+        console.log("comment",comment);
+        singlePageDetails();
     };
 
     const recipeDeleteHandler = () => {
-
         const confirmation = window.confirm('Are you sure you want to delete this recipe?');
         if (confirmation) {
             recipeService.remove(recipeId)
@@ -107,8 +99,8 @@ const SingleRecipe = () => {
                                     <dl className="user">
                                         <dt>Category</dt>
                                         <dd>{currentRecipe.category}</dd>
-                                        <dt>Posted by</dt>
-                                        <dd></dd>
+                                        <dt>Posted by </dt>
+                                        <dd>{currentRecipe.postedBy}</dd>
                                     </dl>
                                     <dl className="ingredients">
                                         <dt>300g</dt>
@@ -133,22 +125,22 @@ const SingleRecipe = () => {
                         </div>
                         {currentRecipe.comments &&
                             <div className="comments" id="comments">
-                                <h2>{currentRecipe.comments ? 0 : currentRecipe.comments.length + 1} comment/s </h2>
+                                <h2>{!currentRecipe.comments ? 0 : currentRecipe.comments.length} comment/s </h2>
                                 <ol className="comment-list">
-                                    {currentRecipe.comments?.map(x =>
-                                        <li key={x} className="comment depth-1">
+                                    {currentRecipe.comments?.map((x) =>
+                                        <li key={x._id} className="comment depth-1">
                                             <div className="avatar">
-                                                <img  src={x.user.imageUrl} alt=""/>
+                                                <img  src={x.user?.imageUrl } alt=""/>
                                             </div>
                                             <div className="comment-box">
                                                 <div className="comment-author meta">
-                                                    <strong>{x.user.name}</strong> said {x._createdOn} ago
+                                                    <strong>{x.user?.name }</strong> said {x._createdOn} ago
                                                     {isAuthenticated && user._id === currentRecipe._ownerId &&
-                                                        <a href="#respond" className="comment-reply-link"> Reply </a>
+                                                        <a href="#comment-form" className="comment-reply-link"> Reply </a>
                                                     }
                                                 </div>
                                                 <div className="comment-text">
-                                                    <p>{x.content}</p>
+                                                    <p>{x.text}</p>
                                                 </div>
                                             </div>
                                         </li>
@@ -161,25 +153,21 @@ const SingleRecipe = () => {
                                 <div className="comment-respond" id="respond">
                                 <h2>Leave a reply</h2>
                                     <div className="container">
-                                        <form onSubmit={ addCommentHandler }>
+                                        <form onSubmit={ addCommentHandler } id="comment-form">
                                             <div className="f-row">
-                                                <textarea id="contetnt" name="content"  value={comment.content} onChange={changeHandler} placeholder="Please enter your reply" />
+                                                <textarea
+                                                    name="commentText"
+                                                    defaultValue={""}
+                                                    placeholder="Please enter your reply"
+                                                />
                                             </div>
+
                                             <div className="f-row">
                                                 <div className="third bwrap">
                                                     <button id="submitComment" type="submit" >Submit comment</button>
                                                 </div>
                                             </div>
-                                            <div className="bottom">
-                                                <div className="f-row checkbox">
-                                                    <div className="checker" id="uniform-ch2">
-                                                        <span>
-                                                            <input type="checkbox" name="emailNotification" id="ch2" checked={comment.emailNotification} onChange={changeHandler}/>
-                                                        </span>
-                                                    </div>
-                                                    <label htmlFor="ch2">Notify me of new articles by email.</label>
-                                                </div>
-                                            </div>
+
                                         </form>
                                     </div>
                                 </div>

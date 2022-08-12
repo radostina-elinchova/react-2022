@@ -1,12 +1,17 @@
 import {useContext, useState} from 'react';
 
 import { RecipeContext } from '../contexts/RecipeContext';
+import { user } from '../contexts/AuthContext';
 import * as recipeService from '../services/recipeService';
 import * as authService from "../services/authService";
 import { useNavigate } from "react-router-dom";
+import {AuthContext } from "../contexts/AuthContext";
+import * as commentService from "../services/commentService";
 
 const CreateRecipe = () => {
+    const { user } = useContext(AuthContext);
     const { recipeAdd } = useContext(RecipeContext);
+
     const navigate = useNavigate();
 
     const [values, setValues] = useState({
@@ -19,15 +24,39 @@ const CreateRecipe = () => {
         description: '',
         pictureUrl: '',
         radio: 'ready',
+        postedBy: user.name
+
     });
+
+    const [ingredients, setIngredients] = useState([{
+        name: "",
+        quantity: 0,
+        categoryIngr: 'Deserts',
+    }]);
 
     const changeHandler = (e) => {
         setValues(state => ({
             ...state,
             [e.target.name]: e.target.value
         }));
+        setIngredients(state => ({
+            ...state,
+            [e.target.name]: e.target.value
+        }));
     };
 
+    const addIngredientHandler = (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const comment = formData.get('commentText');
+        console.log("comment text",comment)
+        ingredientsService.create(recipeId, comment)
+            .then(result => {
+                addComment(recipeId, comment);
+            });
+        console.log("comment",comment);
+        singlePageDetails();
+    };
 
     const onSubmit = (e) => {
         e.preventDefault();
@@ -128,31 +157,42 @@ const CreateRecipe = () => {
                                     </div>
                                 </section>
 
+                                <section>
+                                    <h2>Ingredients</h2>
+                                    <div className="f-row ingredient">
+                                        <div className="large">
+                                            <input id="ingredients" name="ingredients" type="text" value={ingredients.name} onChange={changeHandler} placeholder="Ingredient"/>
+                                        </div>
+                                        <div className="small">
+                                            <input id="quantity" name="quantity" type="text" value={ingredients.quantity} onChange={changeHandler} placeholder="Quantity"/>
+                                        </div>
+
+                                        <div className="third">
+                                            <form onSubmit={ addIngredientHandler }>
+                                                <div className="selector" style={{width: '146.117px'}}>
+                                                    <span style={{ width: '134.117px' }}> {ingredients.categoryIngr}</span>
+                                                    <select  className="selector" style={{ width: '146.117px' }} name="categoryIngr" id="categoryIngr" onChange={changeHandler}>
+                                                        <option value="Deserts">Deserts</option>
+                                                        <option value="Salads">Salads</option>
+                                                        <option value="Meat">Meat</option>
+                                                        <option value="Apetizers">Apetizers</option>
+                                                        <option value="Soups">Soups</option>
+                                                    </select>
+                                                </div>
+                                                <div className="f-row full">
+                                                    <button id="submitIngredient" type="submit" className="add">Add an ingredient</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <button className="remove">-</button>
+                                    </div>
+
+                                </section>
+
                                 <div className="f-row full">
                                     <button id="submitRecipe" className="button" type="submit" >Publish this recipe</button>
                                     <button id="close"  style={{marginLeft:'15px'}} className="button" type="button" onClick={() => navigate(-1)}>Close</button>
                                 </div>
-
-                                {/*<section>*/}
-                                {/*    <h2>Ingredients</h2>*/}
-                                {/*    <div className="f-row ingredient">*/}
-                                {/*        <div className="large"><input type="text" placeholder="Ingredient"/></div>*/}
-                                {/*        <div className="small"><input type="text" placeholder="Quantity"/></div>*/}
-                                {/*        <div className="third">*/}
-                                {/*            <div className="selector" style={{width: '146.117px'}}>*/}
-                                {/*                <span style={{*/}
-                                {/*                    width: '134.117px',*/}
-                                {/*                    userSelect: 'none'*/}
-                                {/*                }}>Select a category</span><select>*/}
-                                {/*                <option>Select a category</option>*/}
-                                {/*            </select></div>*/}
-                                {/*        </div>*/}
-                                {/*        <button className="remove">-</button>*/}
-                                {/*    </div>*/}
-                                {/*    <div className="f-row full">*/}
-                                {/*        <button className="add">Add an ingredient</button>*/}
-                                {/*    </div>*/}
-                                {/*</section>*/}
 
                                 {/*<section>*/}
                                 {/*    <h2>Instructions <span>(enter instructions, each step at a time)</span></h2>*/}

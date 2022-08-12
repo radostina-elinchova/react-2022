@@ -2,6 +2,7 @@ import { createContext, useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 
 import * as recipeService from '../services/recipeService';
+import * as ingredientService from  '../services/ingredientService';
 
 export const RecipeContext = createContext();
 
@@ -47,6 +48,8 @@ export const RecipeProvider = ({
         });
     };
 
+
+
     const selectRecipe = (recipeId) => {
         return recipes.find(x => x._id === recipeId) || {};
     };
@@ -71,7 +74,8 @@ export const RecipeProvider = ({
             fetchRecipeDetails,
             selectRecipe,
             recipeRemove,
-            addComment
+            addComment,
+            addIngredient
 
         }}>
             {children}
