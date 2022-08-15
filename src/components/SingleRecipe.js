@@ -41,6 +41,7 @@ const SingleRecipe = () => {
             });
         console.log("comment",comment);
         singlePageDetails();
+        document.getElementById('commentTextArea').value = '';
     };
 
     const recipeDeleteHandler = () => {
@@ -74,14 +75,19 @@ const SingleRecipe = () => {
                                         </>
                                     }
 
-                                    <div className="image"><a href="#"><img src={currentRecipe.pictureUrl} /></a></div>
-                                    <div className="intro"><p><strong>{currentRecipe.title}</strong></p>
+                                    <div className="image">
+                                        <a href="#">
+                                            <img src={currentRecipe.pictureUrl} />
+                                        </a>
+                                    </div>
+                                    <div className="intro">
+                                        <p><strong>{currentRecipe.title}</strong></p>
                                         <p>{currentRecipe.description}</p></div>
                                     <div className="instructions">
                                         <ol>
-                                            <li>Heat oven to 160C/140C fan/gas 3 and line a 12-hole muffin tin with cases. Gently melt the butter, chocolate, sugar and 100ml hot water together in a large saucepan, stirring occasionally, then set aside to cool a little while you weigh the other ingredients.</li>
-                                            <li>Stir the eggs and vanilla into the chocolate mixture. Put the flour into a large mixing bowl, then stir in the chocolate mixture until smooth. Spoon into cases until just over three-quarters full (you may have a little mixture leftover), then set aside for 5 mins before putting on a low shelf in the oven and baking for 20-22 mins. Leave to cool.</li>
-                                            <li>For the icing, melt the chocolate in a heatproof bowl over a pan of barely simmering water. Once melted, turn off the heat, stir in the double cream and sift in the icing sugar. When spreadable, top each cake with some and decorate with your favourite sprinkles and sweets.</li>
+                                            {currentRecipe.steps?.map((x) =>
+                                                <li key={x}>{x}</li>
+                                            )}
                                         </ol>
                                     </div>
                                 </article>
@@ -155,7 +161,7 @@ const SingleRecipe = () => {
                                     <div className="container">
                                         <form onSubmit={ addCommentHandler } id="comment-form">
                                             <div className="f-row">
-                                                <textarea
+                                                <textarea id="commentTextArea"
                                                     name="commentText"
                                                     defaultValue={""}
                                                     placeholder="Please enter your reply"

@@ -1,12 +1,12 @@
-import {useContext, useState} from 'react';
-
-import { RecipeContext } from '../contexts/RecipeContext';
-import { user } from '../contexts/AuthContext';
-import * as recipeService from '../services/recipeService';
-import * as authService from "../services/authService";
+import {useContext, useEffect, useState} from 'react';
 import { useNavigate } from "react-router-dom";
 import {AuthContext } from "../contexts/AuthContext";
-import * as commentService from "../services/commentService";
+import { RecipeContext } from '../contexts/RecipeContext';
+import * as recipeService from '../services/recipeService';
+import {Step} from "./Step";
+
+
+
 
 const CreateRecipe = () => {
     const { user } = useContext(AuthContext);
@@ -24,11 +24,15 @@ const CreateRecipe = () => {
         description: '',
         pictureUrl: '',
         radio: 'ready',
-        postedBy: user.name
-
+        postedBy: user.name,
+        step:""
     });
 
-    const [ingredients, setIngredients] = useState([{
+
+    const[steps, setSteps] = useState([])
+
+    const[ingredients, setIngredients] = useState([])
+    const [ingredient, setIngredient] = useState([{
         name: "",
         quantity: 0,
         categoryIngr: 'Deserts',
@@ -39,29 +43,52 @@ const CreateRecipe = () => {
             ...state,
             [e.target.name]: e.target.value
         }));
-        setIngredients(state => ({
-            ...state,
-            [e.target.name]: e.target.value
-        }));
     };
 
+    useEffect(() => {
+        console.log("steps",steps)
+        console.log("values",values)
+        setValues((state) => ({
+            ...state,
+            step:""
+        }));
+    }, [steps])
+
     const addIngredientHandler = (e) => {
+
         e.preventDefault();
-        const formData = new FormData(e.target);
-        const comment = formData.get('commentText');
-        console.log("comment text",comment)
-        ingredientsService.create(recipeId, comment)
-            .then(result => {
-                addComment(recipeId, comment);
-            });
-        console.log("comment",comment);
-        singlePageDetails();
+        console.log("rrr",e)
+
+        setIngredients(state => [
+            ...state,
+            {
+                ...ingredient,
+            },
+        ]);
+
+
+    };
+
+    const addStepHandler = (e) => {
+        e.preventDefault();
+        setSteps(state => [...state, values.step]);
+        // setValues(state => ({...state, step: ""}));
+        console.log("old state,",values)
+
+        console.log("new state,",values)
+    };
+    const removeStepHandler = (step) => {
+        console.log("current",steps)
+        setSteps(state => state.filter(x => x !== step));
+        console.log("removed",steps)
     };
 
     const onSubmit = (e) => {
         e.preventDefault();
-
-        recipeService.create(values)
+        const filteredData =  Object.fromEntries(Object.entries(values).filter(([key, value]) => key !== 'step'))
+        console.log("filtered",filteredData);
+        const data = {...filteredData, steps}
+        recipeService.create(data)
             .then(result => {
                 recipeAdd(result)
                 navigate('/recipes');
@@ -126,13 +153,31 @@ const CreateRecipe = () => {
                                         </div>
                                     </div>
                                 </section>
-
                                 <section>
                                     <h2>Photo</h2>
                                     <div className="f-row full">
                                         <div >
                                             <input id="pictureUrl" name="pictureUrl" type="text" value={values.pictureUrl} onChange={changeHandler} placeholder="Choose File Url"/>
                                         </div>
+                                    </div>
+                                </section>
+                                <section>
+                                    <h2>Instructions <span>(enter instructions, each step at a time)</span></h2>
+                                    <ul className="steps-list">
+                                        {steps?.map((x) =>
+                                            <li key={x}>
+                                                <p>{x}</p>
+                                                <button className="remove" onClick={() => removeStepHandler(x)}>-</button>
+                                            </li>
+                                        )}
+                                    </ul>
+                                    <div className="f-row instruction">
+                                        <div className="full">
+                                            <input id="step" name="step" type="text" value={values.step} onChange={changeHandler} placeholder="Instructions"/>
+                                        </div>
+                                    </div>
+                                    <div className="f-row full">
+                                        <button className="add" onClick={addStepHandler}>Add a step</button>
                                     </div>
                                 </section>
                                 <section>
@@ -157,53 +202,56 @@ const CreateRecipe = () => {
                                     </div>
                                 </section>
 
-                                <section>
-                                    <h2>Ingredients</h2>
-                                    <div className="f-row ingredient">
-                                        <div className="large">
-                                            <input id="ingredients" name="ingredients" type="text" value={ingredients.name} onChange={changeHandler} placeholder="Ingredient"/>
-                                        </div>
-                                        <div className="small">
-                                            <input id="quantity" name="quantity" type="text" value={ingredients.quantity} onChange={changeHandler} placeholder="Quantity"/>
-                                        </div>
 
-                                        <div className="third">
-                                            <form onSubmit={ addIngredientHandler }>
-                                                <div className="selector" style={{width: '146.117px'}}>
-                                                    <span style={{ width: '134.117px' }}> {ingredients.categoryIngr}</span>
-                                                    <select  className="selector" style={{ width: '146.117px' }} name="categoryIngr" id="categoryIngr" onChange={changeHandler}>
-                                                        <option value="Deserts">Deserts</option>
-                                                        <option value="Salads">Salads</option>
-                                                        <option value="Meat">Meat</option>
-                                                        <option value="Apetizers">Apetizers</option>
-                                                        <option value="Soups">Soups</option>
-                                                    </select>
-                                                </div>
-                                                <div className="f-row full">
-                                                    <button id="submitIngredient" type="submit" className="add">Add an ingredient</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <button className="remove">-</button>
-                                    </div>
 
-                                </section>
+                                {/*<section>*/}
+                                {/*    <h2>Ingredients</h2>*/}
+                                {/*    <ol className="comment-list">*/}
+                                {/*        {ingredients?.map((x) =>*/}
+                                {/*            <li key={x}>*/}
+                                {/*                <div>*/}
+                                {/*                    <p>{x.ingredients}</p>*/}
+                                {/*                </div>*/}
+                                {/*            </li>*/}
+                                {/*        )}*/}
+                                {/*    </ol>*/}
+
+
+                                {/*        <div className="f-row ingredient">*/}
+                                {/*            <div className="large">*/}
+                                {/*                <input id="ingredients" name="ingredients" type="text" value={ingredient.name} onChange={changeHandler} placeholder="Ingredient"/>*/}
+                                {/*            </div>*/}
+                                {/*            <div className="small">*/}
+                                {/*                <input id="quantity" name="quantity" type="text" value={ingredient.quantity} onChange={changeHandler} placeholder="Quantity"/>*/}
+                                {/*            </div>*/}
+
+                                {/*            <div className="third">*/}
+                                {/*                    <div className="selector" style={{width: '146.117px'}}>*/}
+                                {/*                        <span style={{ width: '134.117px' }}> {ingredient.categoryIngr}</span>*/}
+                                {/*                        <select  className="selector" style={{ width: '146.117px' }} name="categoryIngr" id="categoryIngr" onChange={changeHandler}>*/}
+                                {/*                            <option value="Deserts">Deserts</option>*/}
+                                {/*                            <option value="Salads">Salads</option>*/}
+                                {/*                            <option value="Meat">Meat</option>*/}
+                                {/*                            <option value="Apetizers">Apetizers</option>*/}
+                                {/*                            <option value="Soups">Soups</option>*/}
+                                {/*                        </select>*/}
+                                {/*                    </div>*/}
+                                {/*                /!*<button className="remove">-</button>*!/*/}
+                                {/*            </div>*/}
+                                {/*            <div className="f-row full">*/}
+                                {/*                <button id="submitIngredient" type="button" onClick={addIngredientHandler}>Add an ingredient</button>*/}
+                                {/*            </div>*/}
+
+                                {/*        </div>*/}
+
+                                {/*</section>*/}
 
                                 <div className="f-row full">
                                     <button id="submitRecipe" className="button" type="submit" >Publish this recipe</button>
                                     <button id="close"  style={{marginLeft:'15px'}} className="button" type="button" onClick={() => navigate(-1)}>Close</button>
                                 </div>
 
-                                {/*<section>*/}
-                                {/*    <h2>Instructions <span>(enter instructions, each step at a time)</span></h2>*/}
-                                {/*    <div className="f-row instruction">*/}
-                                {/*        <div className="full"><input type="text" placeholder="Instructions"/></div>*/}
-                                {/*        <button className="remove">-</button>*/}
-                                {/*    </div>*/}
-                                {/*    <div className="f-row full">*/}
-                                {/*        <button className="add">Add a step</button>*/}
-                                {/*    </div>*/}
-                                {/*</section>*/}
+
 
 
 

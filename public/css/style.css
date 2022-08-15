@@ -527,7 +527,7 @@ input,textarea 						{outline: none;}
 button, input, select, textarea 		{font-family:'Raleway',Arial,Helvetica,sans-serif;margin: 0; vertical-align: baseline; *vertical-align: middle;outline:none;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none; -webkit-transition:all 0.2s ease-in;-moz-transition:all 0.2s ease-in;-o-transition:all 0.2s ease-in;-ms-transition:all 0.2s ease-in;transition:all 0.2s ease-in;}
 button, input[type="button"], input[type="reset"], input[type="submit"] {border:none; cursor: pointer; text-transform:uppercase;-webkit-appearance: button; background:#FF7B74;color:#fff;text-align:center;font-size:13px;font-weight:700;padding:11px 14px;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;}
 button:hover, input[type="button"]:hover, input[type="reset"]:hover, input[type="submit"]:hover,
-button:focus, input[type="button"]:focus, input[type="reset"]:focus, input[type="submit"]:focus {background:#F4716A;}
+button:focus, input[type="button"]:focus, input[type="reset"]:focus, input[type="submit"]:focus {background:#d9453d;}
 input[type="checkbox"], input[type="radio"] { box-sizing: border-box; width:100%;height:100%;}
 input[type="search"] { -webkit-appearance: textfield;}
 input[type="search"]::-webkit-search-decoration { -webkit-appearance: none; }
@@ -947,4 +947,8 @@ div.uploader.disabled.active span.action 		{}
     .slicknav_nav {top:90px;}
 
     .quicklinks .button {width:90%;margin:0 0 15px;}
+}
+
+.steps-list p {
+    display: inline-block;
 }

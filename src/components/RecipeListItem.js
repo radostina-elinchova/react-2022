@@ -19,7 +19,7 @@ const RecipesListItem = ({recipe}) => {
                         </div>
                         <div className="comments">
                             <i className="fa fa-comment" aria-hidden="true" />
-                            <a href="recipe.html#comments">27</a>
+                            <span>{recipe.comments?.length || 0}</span>
                         </div>
                     </div>
                 </div>
