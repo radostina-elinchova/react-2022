@@ -35,7 +35,7 @@ const CreateRecipe = () => {
     const[ingredient, setIngredient] = useState([{
         name: "",
         quantity: 0,
-        categoryIngr: 'Deserts',
+        categoryIngr: '',
     }])
 
     const changeHandler = (e) => {
@@ -60,12 +60,7 @@ const CreateRecipe = () => {
     };
 
     const addStepHandler = () => {
-
         setSteps(state => [...state, values.step]);
-        setValues((state) => ({
-            ...state,
-            step:""
-        }));
 
     };
     const removeStepHandler = (step) => {

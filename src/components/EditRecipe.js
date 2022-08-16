@@ -182,7 +182,7 @@ const EditRecipe = () => {
                                                     <p>{x.name}</p>
                                                     <p>{x.quantity}</p>
                                                     <p>{x.categoryIngr}</p>
-                                                    <button className="remove" onClick={() => removeIngrHandler(x)}>-</button>
+                                                    <button className="remove" type="button" onClick={() => removeIngrHandler(x)}>-</button>
                                                 </div>
                                             </li>
                                         )}
