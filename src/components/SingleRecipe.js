@@ -15,7 +15,6 @@ const SingleRecipe = () => {
     const currentRecipe = selectRecipe(recipeId);
 
 
-
     useEffect(() => {
         singlePageDetails()
 
@@ -109,22 +108,13 @@ const SingleRecipe = () => {
                                         <dd>{currentRecipe.postedBy}</dd>
                                     </dl>
                                     <dl className="ingredients">
-                                        <dt>300g</dt>
-                                        <dd>Self-raising flour</dd>
-                                        <dt>200g</dt>
-                                        <dd>Butter</dd>
-                                        <dt>200g</dt>
-                                        <dd>Plain chocolate</dd>
-                                        <dt>2</dt>
-                                        <dd>Eggs</dd>
-                                        <dt>1 tbsp</dt>
-                                        <dd>Vanilla extract</dd>
-                                        <dt>200 g</dt>
-                                        <dd>Brown sugar</dd>
-                                        <dt>100 ml</dt>
-                                        <dd>Double cream</dd>
-                                        <dt>handful</dt>
-                                        <dd>Sprinkles</dd>
+                                        {currentRecipe.ingredients?.map((x) =>
+                                            < span key={x}>
+                                                <dt>{x.quantity} {x.categoryIngr}</dt>
+                                                <dd>{x.name}</dd>
+                                            </span>
+                                        )}
+
                                     </dl>
                                 </article>
                             </div>

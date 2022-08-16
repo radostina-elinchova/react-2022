@@ -11,11 +11,17 @@ export const RecipeProvider = ({
  }) => {
     const navigate = useNavigate();
     const [recipes, setRecipes] = useState( []);
+    const [filteredRecipes, setFilteredRecipes] = useState( []);
+    const [filters, setFilters] = useState({
+        text:"",
+        criteria:'all'
+    })
 
     useEffect(() => {
         recipeService.getAll()
             .then(result => {
                 setRecipes(result);
+                setFilteredRecipes(result);
             });
     }, []);
 
@@ -49,8 +55,6 @@ export const RecipeProvider = ({
         });
     };
 
-
-
     const selectRecipe = (recipeId) => {
         return recipes.find(x => x._id === recipeId) || {};
     };
@@ -67,16 +71,27 @@ export const RecipeProvider = ({
         setRecipes(state => state.map(x => x._id === recipeId ? recipeData : x));
     };
 
+    const filterRecipes = (text, criteria ='all') => {
+        if (criteria==='all'){
+            setFilteredRecipes(recipes);
+        } else {
+            console.log("recipes",recipes)
+            setFilteredRecipes(recipes.filter(x => x[criteria].includes(text)))
+        }
+
+    };
+
     return (
         <RecipeContext.Provider value={{
             recipes,
+            filteredRecipes,
             recipeAdd,
             recipeEdit,
             fetchRecipeDetails,
             selectRecipe,
             recipeRemove,
-            addComment
-
+            addComment,
+            filterRecipes
         }}>
             {children}
         </RecipeContext.Provider>

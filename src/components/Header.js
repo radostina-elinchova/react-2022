@@ -57,12 +57,17 @@ const Header = () => {
                                     <span>Submit a recipe</span>
                                 </Link>
                             </li>
+                            <li className="light">
+                                <Link to="/search" title="Search for recipes">
+                                    <i className="icon icon-themeenergy_search"></i>
+                                    <span>Search for recipes</span>
+                                </Link>
+                            </li>
                         </ul>
                     </nav>
                 }
             </div>
         </header>
-
 
 );
 };
