@@ -59,7 +59,7 @@ const SingleRecipe = () => {
             <div className="wrap clearfix">
                 <div className="row">
                     <header className="s-title">
-                        <h1>A luxurious black &amp; white chocolate cupcake</h1>
+                        <h1>{currentRecipe.title}</h1>
                     </header>
                     <section className="content three-fourth">
                         <div className="recipe">

@@ -17,10 +17,6 @@ const RecipesListItem = ({recipe}) => {
                             <i className="ico i-medium" />
                             <span>{recipe.difficulty}</span>
                         </div>
-                        <div className="comments">
-                            <i className="fa fa-comment" aria-hidden="true" />
-                            <span>{recipe.comments?.length || 0}</span>
-                        </div>
                     </div>
                 </div>
             </div>

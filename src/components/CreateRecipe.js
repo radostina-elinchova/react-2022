@@ -32,11 +32,11 @@ const CreateRecipe = () => {
     const[steps, setSteps] = useState([]);
     const[ingredients, setIngredients] = useState([]);
 
-    const[ingredient, setIngredient] = useState([{
+    const[ingredient, setIngredient] = useState({
         name: "",
         quantity: 0,
         categoryIngr: '',
-    }])
+    })
 
     const changeHandler = (e) => {
         setValues(state => ({
