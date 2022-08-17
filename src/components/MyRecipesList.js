@@ -22,9 +22,7 @@ const MyRecipesList = () => {
         <main className="main" role="main">
           <div className="wrap clearfix">
             <div className="row">
-              <header className="s-title">
-                <h1>My Recipes</h1>
-              </header>
+
 
               <section className="content three-fourth">
                   <div className="entries row">

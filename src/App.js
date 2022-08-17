@@ -15,7 +15,7 @@ import SingleRecipe from "./components/SingleRecipe";
 import ProfileDetails from "./components/ProfileDetails";
 import Logout from "./components/Logout";
 import EditRecipe from "./components/EditRecipe";
-import MyRecipesList from "./components/MyRecipesList";
+
 import Footer from "./components/Footer";
 import Search from "./components/Search";
 const RecipesList = lazy(() => import('./components/RecipesList'));
@@ -60,13 +60,12 @@ function App() {
 
                             </RecipeProvider>
                         } />
-                        <Route path="/myrecipes" element={(
+                        <Route path="/profileDetails/*" element={(
                             <PrivateRoute>
-                                <MyRecipesList />
+                                <ProfileDetails />
                             </PrivateRoute>
                         )} />
                         <Route path="/recipes/:recipeId" element={<SingleRecipe />} />
-                        <Route path="/profileDetails" element={<ProfileDetails />} />
                     </Routes>
                     </div>
                 </main>

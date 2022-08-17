@@ -100,7 +100,7 @@ const EditRecipe = () => {
             [e.target.name]: values[e.target.name].length < bound,
         }));
     }
-    const isFormValid = !Object.values(errors).some(x => x)
+    const isFormValid = !Object.values(errors).some(x => x) && ingredients.length>0&& steps.length>0
     return (
         <main className="main" role="main">
             <div className="wrap clearfix">
