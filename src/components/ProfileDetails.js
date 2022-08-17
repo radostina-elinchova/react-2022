@@ -9,9 +9,7 @@ const ProfileDetails = () => {
     return (
 
         <section className="content">
-
             <div className="row">
-
                 <div className="my_account ">
                     <figure>
                         <img src={user.imageUrl} alt=""/>
@@ -20,7 +18,6 @@ const ProfileDetails = () => {
                         <h2>{user.name}</h2>
                     </div>
                 </div>
-
                 <div className="three-fourth">
                     <nav className="tabs">
                         <ul>
@@ -37,40 +34,29 @@ const ProfileDetails = () => {
 
                         </ul>
                     </nav>
-
                     <Routes>
                         <Route path="myrecipes" element={<MyRecipesList />} />
                         <Route path="about" element={
                             <main className="main" role="main">
                                 <div className="wrap clearfix">
                                     <div className="row">
-                            <div className="tab-content" id="about" >
-                                <div className="row">
-                                    <dl className="basic two-third">
-                                        <dt>Name</dt>
-                                        <dd>{user.name}</dd>
-                                        <dt>Email</dt>
-                                        <dd>{user.email}</dd>
-                                    </dl>
-
-
-                                </div>
-                            </div>
-                            </div>
-                            </div>
+                                        <div className="tab-content" id="about" >
+                                            <div className="row">
+                                                <dl className="basic two-third">
+                                                    <dt>Name</dt>
+                                                    <dd>{user.name}</dd>
+                                                    <dt>Email</dt>
+                                                    <dd>{user.email}</dd>
+                                                </dl>
+                                            </div>
+                                        </div>
+                                    </div>
+                                  </div>
                             </main>
                         } />
                     </Routes>
-
-
-
-
-
-
-
                 </div>
             </div>
-
         </section>
 
     )

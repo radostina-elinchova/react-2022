@@ -151,7 +151,6 @@ const CreateEditRecipe = ({method, recipeId}) => {
                                                 </p>
                                             }
                                         </div>
-
                                         <div className="third">
                                             <input id="cookTime" name="cookTime" type="text" value={values.cookTime} onChange={changeHandler} placeholder="Cooking time" onBlur={(e) => minLength(e, 1)}/>
                                             {errors.cookTime &&
@@ -160,7 +159,6 @@ const CreateEditRecipe = ({method, recipeId}) => {
                                                 </p>
                                             }
                                         </div>
-
                                         <div className="third">
                                             <input id="difficulty" name="difficulty" type="text" value={values.difficulty} onChange={changeHandler} placeholder="Difficulty" onBlur={(e) => minLength(e, 1)}/>
                                             {errors.difficulty &&
@@ -169,7 +167,6 @@ const CreateEditRecipe = ({method, recipeId}) => {
                                                 </p>
                                             }
                                         </div>
-
                                     </div>
                                     <div className="f-row">
                                         <div className="third">
@@ -180,7 +177,6 @@ const CreateEditRecipe = ({method, recipeId}) => {
                                                 </p>
                                             }
                                         </div>
-
                                         <div className="third">
                                             <div className="selector" style={{ width: '146.117px' }}>
                                                 <span style={{ width: '134.117px' }}>
@@ -238,7 +234,6 @@ const CreateEditRecipe = ({method, recipeId}) => {
                                         <button className="add button" type="button" onClick={addStepHandler} disabled={!isStepValid}>Add a step</button>
                                     </div>
                                 </section>
-
                                 <section>
                                     <h2>Ingredients</h2>
                                     <ul className="comment-list">
@@ -253,8 +248,6 @@ const CreateEditRecipe = ({method, recipeId}) => {
                                             </li>
                                         )}
                                     </ul>
-
-
                                     <div className="f-row ingredient">
                                         <div className="large">
                                             <input id="name" name="name" type="text" value={ingredient.name} onChange={changeIngrHandler} placeholder="Ingredient"/>
@@ -284,14 +277,11 @@ const CreateEditRecipe = ({method, recipeId}) => {
                                                 All fields are required
                                             </p>
                                         }
-
                                     </div>
                                     <div className="f-row full">
                                         <button id="submitIngredient"  className="button" type="button" disabled={!isIngredientValid} onClick={addIngredientHandler} >Add an ingredient</button>
                                     </div>
-
                                 </section>
-
                                 <section>
                                     <h2>Status <span>(would you like to further edit this recipe or are you ready to publish it?)</span>
                                     </h2>
@@ -313,20 +303,16 @@ const CreateEditRecipe = ({method, recipeId}) => {
 
                                     </div>
                                 </section>
-
-
                                 <div className="f-row full">
                                     <button id="submitRecipe" className="button" type="submit"  disabled={!isFormValid} >Publish this recipe</button>
                                     <button id="close"  style={{marginLeft:'15px'}} className="button" type="button" onClick={() => navigate(-1)}>Close</button>
                                 </div>
-
                             </form>
                         </div>
                     </section>
                 </div>
             </div>
         </main>
-
     );
 };
 
