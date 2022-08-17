@@ -92,11 +92,6 @@ const EditRecipe = () => {
     const isIngredientValid =Number(ingredient.quantity) > 0;
     const isStepValid = step.length > 0
 
-
-
-
-
-
     const [errors, setErrors] = useState({});
 
     const minLength = (e, bound) => {
@@ -105,6 +100,7 @@ const EditRecipe = () => {
             [e.target.name]: values[e.target.name].length < bound,
         }));
     }
+    const isFormValid = !Object.values(errors).some(x => x)
     return (
         <main className="main" role="main">
             <div className="wrap clearfix">
@@ -302,7 +298,7 @@ const EditRecipe = () => {
 
 
                                 <div className="f-row full">
-                                    <button id="submitRecipe" className="button" type="submit"  >Publish this recipe</button>
+                                    <button id="submitRecipe" className="button" type="submit"  disabled={!isFormValid} >Publish this recipe</button>
                                     <button id="close"  style={{marginLeft:'15px'}} className="button" type="button" onClick={() => navigate(-1)}>Close</button>
                                 </div>
 
