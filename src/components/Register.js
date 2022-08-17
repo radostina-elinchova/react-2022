@@ -24,12 +24,16 @@ const Register = () => {
         }));
     };
 
+    if (values.password !== values.retypedPassword ) {
+
+    }
     const submitHandler = (e) => {
         e.preventDefault();
         console.log(values);
         const { name, email, password, imageUrl } = values
         console.log(email);
         console.log(password);
+
         authService.register(name, email, password, imageUrl)
             .then(authData => {
                 userLogin(authData);
@@ -45,14 +49,6 @@ const Register = () => {
         }));
     }
 
-    const isPositive = (e) => {
-        let number = Number(e.target.value);
-
-        setErrors(state => ({
-            ...state,
-            [e.target.name]: number < 0,
-        }));
-    }
 
     const isFormValid = !Object.values(errors).some(x => x)
 
@@ -66,20 +62,41 @@ const Register = () => {
                     <h3>Register</h3>
                     <form onSubmit={submitHandler}>
                         <div className="f-row">
-                            <input type="text" id="name" name="name" value={values.name} onChange={changeHandler} placeholder="Your name"/>
+                            <input type="text" id="name" name="name" value={values.name} onChange={changeHandler} placeholder="Your name" onBlur={(e) => minLength(e, 3)}/>
                         </div>
+                        {errors.name &&
+                            <p className="error_text">
+                                Name should be at least 3 characters long!
+                            </p>
+                        }
                         <div className="f-row">
-                            <input type="email" id="email" name="email" value={values.email} onChange={changeHandler} placeholder="Your email"/>
+                            <input type="email" id="email" name="email" value={values.email} onChange={changeHandler} placeholder="Your email" />
                         </div>
+                        {errors.email &&
+                            <p className="error_text	">
+                                Please insert a valid email address.
+                            </p>
+                        }
                         <div className="f-row">
                             <input id="imageUrl" name="imageUrl" type="text" value={values.imageUrl} onChange={changeHandler} placeholder="Profile Picture"/>
                         </div>
+
                         <div className="f-row">
-                            <input type="password" id="password" name="password" value={values.password} onChange={changeHandler} placeholder="Your password"/>
+                            <input type="password" id="password" name="password" value={values.password} onChange={changeHandler} placeholder="Your password" onBlur={(e) => minLength(e, 3)}/>
                         </div>
+                        {errors.password &&
+                            <p className="error_text">
+                                Password should be at least 3 characters long!
+                            </p>
+                        }
                         <div className="f-row">
-                            <input type="password" id="retypedPassword" name="retypedPassword" value={values.retypedPassword} onChange={changeHandler} placeholder="Retype password"/>
+                            <input type="password" id="retypedPassword" name="retypedPassword" value={values.retypedPassword} onChange={changeHandler} placeholder="Retype password" onBlur={(e) => minLength(e, 3)}/>
                         </div>
+                        {errors.retypedPassword &&
+                            <p className="error_text">
+                                Retyped password should be at least 3 characters long!
+                            </p>
+                        }
 
                         <div className="f-row bwrap">
                             <button type="submit" disabled={!isFormValid}>register</button>

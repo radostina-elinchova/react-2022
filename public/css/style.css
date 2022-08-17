@@ -187,6 +187,7 @@ tr:nth-child(2n+1) td{background:#f6f6f6;}
 /*BUTTONS*/
 .button 			{border:none;display:inline-block;text-decoration:none !important;position:relative;background:#FF7B74;color:#fff !important;text-align:center;font-size:13px;font-weight:700;padding:11px 14px;min-width:80px;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;text-transform:uppercase;}
 .button:hover,
+.button:disabled,
 .button:focus 	{background:#F4716A;-webkit-box-shadow:inset 0 0 30px rgba(0,0,0,.2);-moz-box-shadow:inset 0 0 30px rgba(0,0,0,.2);box-shadow:inset 0 0 30px rgba(0,0,0,.2);}
 
 .white	 		{color:#F4716A !important;background:#fff !important;}

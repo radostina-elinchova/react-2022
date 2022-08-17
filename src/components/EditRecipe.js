@@ -10,13 +10,14 @@ const EditRecipe = () => {
     const { recipeEdit } = useContext(RecipeContext);
     const navigate = useNavigate();
     const { recipeId } = useParams();
+    const[step, setStep] = useState("");
     const[steps, setSteps] = useState([]);
     const[ingredients, setIngredients] = useState([]);
 
     const[ingredient, setIngredient] = useState([{
         name: "",
         quantity: 0,
-        categoryIngr: 'Deserts',
+        categoryIngr: 'ml',
     }])
 
     const changeHandler = (e) => {
@@ -32,21 +33,23 @@ const EditRecipe = () => {
             [e.target.name]: e.target.value
         }));
     };
-
+    const changeStepHandler = (e) => {
+        setStep(state =>
+            e.target.value
+        );
+    };
     const addIngredientHandler = (e) => {
-        console.log("rrr",e)
-        setIngredients(state => [...state, ingredient]);
+
+        setIngredients(state => [...state,  ingredient]);
         console.log("ingredients",ingredients)
 
     };
 
     const addStepHandler = () => {
 
-        setSteps(state => [...state, values.step]);
-        setValues((state) => ({
-            ...state,
-            step:""
-        }));
+        setSteps(state => [...state, step]);
+        setStep(state => "")
+
 
     };
     const removeStepHandler = (step) => {
@@ -76,7 +79,7 @@ const EditRecipe = () => {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        const data = {...values, steps,ingredients}
+        const data = {...values, steps, ingredients}
 
         console.log("values",data);
         recipeService.edit(recipeId, data)
@@ -86,13 +89,28 @@ const EditRecipe = () => {
             });
     };
 
+    const isIngredientValid =Number(ingredient.quantity) > 0;
+    const isStepValid = step.length > 0
 
+
+
+
+
+
+    const [errors, setErrors] = useState({});
+
+    const minLength = (e, bound) => {
+        setErrors(state => ({
+            ...state,
+            [e.target.name]: values[e.target.name].length < bound,
+        }));
+    }
     return (
         <main className="main" role="main">
             <div className="wrap clearfix">
                 <div className="row">
                     <header className="s-title">
-                        <h1>Add a new recipe</h1>
+                        <h1>Edit the recipe</h1>
                     </header>
                     <section className="content full-width">
                         <div className="submit_recipe container">
@@ -102,24 +120,53 @@ const EditRecipe = () => {
                                     <p>All fields are required.</p>
                                     <div className="f-row">
                                         <div className="full">
-                                            <input id="title" name="title" type="text" value={values.title} onChange={changeHandler} placeholder="Recipe title"/>
+                                            <input id="title" name="title" type="text" value={values.title} onChange={changeHandler} placeholder="Recipe title" onBlur={(e) => minLength(e, 1)}/>
+                                            {errors.title &&
+                                                <p style={{  color: "#F4716A", display: "inline-block" }}>
+                                                    The field is required!
+                                                </p>
+                                            }
                                         </div>
                                     </div>
                                     <div className="f-row">
                                         <div className="third">
-                                            <input id="prepTime" name="prepTime" type="text" value={values.prepTime} onChange={changeHandler} placeholder="Preparation time"/>
+                                            <input id="prepTime" name="prepTime" type="text" value={values.prepTime} onChange={changeHandler} placeholder="Preparation time" onBlur={(e) => minLength(e, 1)}/>
+                                            {errors.prepTime &&
+                                                <p style={{  color: "#F4716A", display: "inline-block" }}>
+                                                    The field is required!
+                                                </p>
+                                            }
                                         </div>
+
                                         <div className="third">
-                                            <input id="cookTime" name="cookTime" type="text" value={values.cookTime} onChange={changeHandler} placeholder="Cooking time"/>
+                                            <input id="cookTime" name="cookTime" type="text" value={values.cookTime} onChange={changeHandler} placeholder="Cooking time" onBlur={(e) => minLength(e, 1)}/>
+                                            {errors.cookTime &&
+                                                <p style={{  color: "#F4716A", display: "inline-block" }}>
+                                                    The field is required!
+                                                </p>
+                                            }
                                         </div>
+
                                         <div className="third">
-                                            <input id="difficulty" name="difficulty" type="text" value={values.difficulty} onChange={changeHandler} placeholder="Difficulty"/>
+                                            <input id="difficulty" name="difficulty" type="text" value={values.difficulty} onChange={changeHandler} placeholder="Difficulty" onBlur={(e) => minLength(e, 1)}/>
+                                            {errors.difficulty &&
+                                                <p style={{  color: "#F4716A", display: "inline-block" }}>
+                                                    The field is required!
+                                                </p>
+                                            }
                                         </div>
+
                                     </div>
                                     <div className="f-row">
                                         <div className="third">
-                                            <input id="servings" name="servings" type="text" value={values.servings} onChange={changeHandler} placeholder="Serves how many people?"/>
+                                            <input id="servings" name="servings" type="text" value={values.servings} onChange={changeHandler} placeholder="Serves how many people?" onBlur={(e) => minLength(e, 1)}/>
+                                            {errors.servings &&
+                                                <p style={{  color: "#F4716A", display: "inline-block" }}>
+                                                    The field is required!
+                                                </p>
+                                            }
                                         </div>
+
                                         <div className="third">
                                             <div className="selector" style={{ width: '146.117px' }}>
                                                 <span style={{ width: '134.117px' }}>
@@ -141,7 +188,7 @@ const EditRecipe = () => {
                                     <h2>Description</h2>
                                     <div className="f-row">
                                         <div className="full">
-                                            <textarea id="description" name="description" value={values.description} onChange={changeHandler} placeholder="Recipe description" defaultValue={""}/>
+                                            <textarea id="description" name="description" value={values.description} onChange={changeHandler} placeholder="Recipe description" />
                                         </div>
                                     </div>
                                 </section>
@@ -165,11 +212,16 @@ const EditRecipe = () => {
                                     </ul>
                                     <div className="f-row instruction">
                                         <div className="full">
-                                            <input id="step" name="step" type="text" value={values.step} onChange={changeHandler} placeholder="Instructions"/>
+                                            <input id="step" name="step" type="text" value={step} onChange={changeStepHandler} placeholder="Instructions"/>
                                         </div>
                                     </div>
+                                    {!isStepValid &&
+                                        <p style={{  color: "#F4716A", display: "inline-block" }}>
+                                            The field is required!
+                                        </p>
+                                    }
                                     <div className="f-row full">
-                                        <button className="add" type="button" onClick={addStepHandler}>Add a step</button>
+                                        <button className="add button" type="button" onClick={addStepHandler} disabled={!isStepValid}>Add a step</button>
                                     </div>
                                 </section>
 
@@ -206,7 +258,6 @@ const EditRecipe = () => {
                                                     name="categoryIngr" id="categoryIngr"
                                                     onChange={changeIngrHandler}
                                                 >
-                                                    <option value="handful">handful</option>
                                                     <option value="ml">ml</option>
                                                     <option value="g">g</option>
                                                     <option value="tbsp">tbsp</option>
@@ -214,11 +265,15 @@ const EditRecipe = () => {
                                             </div>
                                             {/*<button className="remove">-</button>*/}
                                         </div>
-
+                                        {!isStepValid &&
+                                            <p style={{  color: "#F4716A", display: "inline-block" }}>
+                                                All fields are required
+                                            </p>
+                                        }
 
                                     </div>
                                     <div className="f-row full">
-                                        <button id="submitIngredient" type="button" onClick={addIngredientHandler}>Add an ingredient</button>
+                                        <button id="submitIngredient"  className="button" type="button" disabled={!isIngredientValid} onClick={addIngredientHandler} >Add an ingredient</button>
                                     </div>
 
                                 </section>
@@ -246,20 +301,10 @@ const EditRecipe = () => {
                                 </section>
 
 
-
-
-
                                 <div className="f-row full">
-                                    <button id="submitRecipe" className="button" type="submit" >Publish this recipe</button>
+                                    <button id="submitRecipe" className="button" type="submit"  >Publish this recipe</button>
                                     <button id="close"  style={{marginLeft:'15px'}} className="button" type="button" onClick={() => navigate(-1)}>Close</button>
                                 </div>
-
-
-
-
-
-
-
 
                             </form>
                         </div>
