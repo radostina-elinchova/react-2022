@@ -19,7 +19,7 @@ This part of the platform is designed for non-registered users. These users have
 * Edit Recipe ->
   A page with a form for modification of a particularly selected recipe, part of their recipes.
 * Delete Recipe ->
-  A confirmation box about the deletion of particularly selected recipe, part of their classes.
+  A confirmation box about the deletion of particularly selected recipe, part of their recipes.
 
 
 ## About The Project - Technical Description
