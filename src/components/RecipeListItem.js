@@ -21,6 +21,7 @@ const RecipesListItem = ({recipe}) => {
                 </div>
             </div>
         </div>
+
     );
 };
 

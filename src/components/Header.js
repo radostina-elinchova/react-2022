@@ -29,27 +29,31 @@ const Header = () => {
                         </li>
                     </ul>
                 </nav>
-                { isAuthenticated &&
+
                     <nav className="user-nav" role="navigation">
                         <ul>
-                            <li className="light">
-                                <Link to="/logout" title="ProfileDetails">
-                                    <i className="icon icon-themeenergy_chef-hat"/>
-                                    <span>Logout</span>
-                                </Link>
-                            </li>
-                            <li className="medium">
-                                <Link to="/profileDetails" title="ProfileDetails">
-                                    <i className="icon icon-themeenergy_chef-hat"/>
-                                    <span>{user.name}</span>
-                                </Link>
-                            </li>
-                            <li className="dark">
-                                <Link to="/create" title="Submit a recipe">
-                                    <i className="icon icon-themeenergy_fork-spoon"/>
-                                    <span>Submit a recipe</span>
-                                </Link>
-                            </li>
+                            { isAuthenticated &&
+                                <>
+                                    <li className="light">
+                                        <Link to="/logout" title="ProfileDetails">
+                                            <i className="icon icon-themeenergy_chef-hat"/>
+                                            <span>Logout</span>
+                                        </Link>
+                                    </li>
+                                    <li className="medium">
+                                        <Link to="/profileDetails" title="ProfileDetails">
+                                            <i className="icon icon-themeenergy_chef-hat"/>
+                                            <span>{user.name}</span>
+                                        </Link>
+                                    </li>
+                                    <li className="dark">
+                                        <Link to="/create" title="Submit a recipe">
+                                            <i className="icon icon-themeenergy_fork-spoon"/>
+                                            <span>Submit a recipe</span>
+                                        </Link>
+                                    </li>
+                                </>
+                            }
                             <li className="light">
                                 <Link to="/search" title="Search for recipes">
                                     <i className="icon icon-themeenergy_search"></i>
@@ -58,7 +62,7 @@ const Header = () => {
                             </li>
                         </ul>
                     </nav>
-                }
+
             </div>
         </header>
 

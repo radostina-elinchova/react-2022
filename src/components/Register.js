@@ -9,6 +9,7 @@ const Register = () => {
     const navigate = useNavigate();
 
     const [errors, setErrors] = useState({});
+    const [submitError, setSubmitError] = useState("");
     const [values, setValues] = useState({
         name: '',
         email: '',
@@ -36,8 +37,15 @@ const Register = () => {
 
         authService.register(name, email, password, imageUrl)
             .then(authData => {
-                userLogin(authData);
-                navigate('/');
+                if(authData.message){
+                    setSubmitError(authData.message)
+                }
+                else {
+                    userLogin(authData);
+                    navigate('/');
+                    setSubmitError(state => "")
+                }
+
             });
 
     };
@@ -46,6 +54,12 @@ const Register = () => {
         setErrors(state => ({
             ...state,
             [e.target.name]: values[e.target.name].length < bound,
+        }));
+    }
+    const retypedPasValidation = (e) => {
+        setErrors(state => ({
+            ...state,
+            retypedPassword: values.retypedPassword.length < 3 && values.retypedPassword !== values.password
         }));
     }
 
@@ -90,17 +104,22 @@ const Register = () => {
                             </p>
                         }
                         <div className="f-row">
-                            <input type="password" id="retypedPassword" name="retypedPassword" value={values.retypedPassword} onChange={changeHandler} placeholder="Retype password" onBlur={(e) => minLength(e, 3)}/>
+                            <input type="password" id="retypedPassword" name="retypedPassword" value={values.retypedPassword} onChange={changeHandler} placeholder="Retype password" onBlur={retypedPasValidation}/>
                         </div>
                         {errors.retypedPassword &&
                             <p className="error_text">
-                                Retyped password should be at least 3 characters long!
+                                Retyped password should match password!
                             </p>
                         }
 
                         <div className="f-row bwrap">
                             <button type="submit" disabled={!isFormValid}>register</button>
                         </div>
+                        {submitError &&
+                            <p className="error_text">
+                                {submitError}
+                            </p>
+                        }
                         <p>Already have an account yet? <Link to="/login">Log in.</Link></p>
                     </form>
                 </div>

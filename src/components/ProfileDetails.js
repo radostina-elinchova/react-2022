@@ -10,7 +10,7 @@ const ProfileDetails = () => {
 
         <section className="content">
             <div className="row">
-                <div className="my_account ">
+                <div className="my_account  one-fourth">
                     <figure>
                         <img src={user.imageUrl} alt=""/>
                     </figure>
@@ -26,7 +26,7 @@ const ProfileDetails = () => {
                                     About me
                                 </Link>
                             </li>
-                            <li className="active">
+                            <li className="">
                                 <Link to="/profileDetails/myrecipes" title="About me">
                                     My recipes
                                 </Link>
@@ -37,27 +37,24 @@ const ProfileDetails = () => {
                     <Routes>
                         <Route path="myrecipes" element={<MyRecipesList />} />
                         <Route path="about" element={
-                            <main className="main" role="main">
-                                <div className="wrap clearfix">
-                                    <div className="row">
-                                        <div className="tab-content" id="about" >
-                                            <div className="row">
-                                                <dl className="basic two-third">
-                                                    <dt>Name</dt>
-                                                    <dd>{user.name}</dd>
-                                                    <dt>Email</dt>
-                                                    <dd>{user.email}</dd>
-                                                </dl>
-                                            </div>
-                                        </div>
-                                    </div>
-                                  </div>
-                            </main>
+                            <div className="tab-content" id="about" >
+                                <div className="row">
+                                    <dl className="basic two-fourth">
+                                        <dt>Name</dt>
+                                        <dd>{user.name}</dd>
+                                        <dt>Email</dt>
+                                        <dd>{user.email}</dd>
+                                    </dl>
+                                </div>
+                            </div>
+
                         } />
                     </Routes>
                 </div>
             </div>
         </section>
+
+
 
     )
 }
