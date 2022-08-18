@@ -4,16 +4,16 @@
 This part of the platform is designed for non-registered users. These users have access to the following:
 
 * Home page ->
-  Main dashboard page in which the user can find the registration and the login forms
+  Main dashboard page in which the users can find the registration and the login forms
 * Recipes ->
   Recipes catalog page which lists all available recipes
 * Search ->
-  A page where the user can search a recipe by name
+  A page where the users can search a recipe by name
 
 ## Private part
 
 * Profile ->
-  The page where a user can view their user information as well as their recipes. (created by them).
+  The page where the users can view their user information as well as their recipes. (created by them).
 * Create Recipe ->
   A page with a form for creation of recipes.
 * Edit Recipe ->
