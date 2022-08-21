@@ -43,7 +43,7 @@ const Register = () => {
                 else {
                     userLogin(authData);
                     navigate('/');
-                    setSubmitError(state => "")
+                    setSubmitError("")
                 }
 
             });

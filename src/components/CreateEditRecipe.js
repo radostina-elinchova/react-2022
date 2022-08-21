@@ -55,18 +55,15 @@ const CreateEditRecipe = ({method, recipeId}) => {
         }));
     };
     const changeStepHandler = (e) => {
-        setStep(state =>
-            e.target.value
+        setStep(e.target.value
         );
     };
 
     const addStepHandler = () => {
-
         setSteps(state => [...state, step]);
-        setStep(state => "")
-
-
+        setStep("")
     };
+
     const removeStepHandler = (step) => {
         console.log("current",steps)
         setSteps(state => state.filter(x => x !== step));
